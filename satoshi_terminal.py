@@ -36,6 +36,11 @@ class Satoshi(QWidget):
         self.button_headlines = QPushButton('Crypto Headlines')
         self.button_headlines.clicked.connect(self.crypto_headlines)
 
+        # Economic News
+        '''''
+        self.button_news = QPushButton('Economic News')
+        self.button_news.clicked.connect(self.economic_news)
+        '''
         # Exit application
         self.button_exit = QPushButton('Exit')
         self.button_exit.clicked.connect(self.close_application)
@@ -57,8 +62,10 @@ class Satoshi(QWidget):
         layout.addWidget(self.textarea)
         layout.addWidget(self.button_exit)
         self.setLayout(layout)
-        
-
+    '''''    
+    def economic_news(self):
+        openbb.root.news(term: str="", sources: str="", sort: str="published")    
+    '''''
     def crypto_headlines(self):
         result = request(f"https://api.finbrain.tech/v0/sentiments/USDC")
         sentiment = pd.DataFrame()
