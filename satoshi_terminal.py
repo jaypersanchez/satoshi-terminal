@@ -1,10 +1,13 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QTextEdit, QDesktopWidget, QTableView
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QTextEdit, QDesktopWidget, QTableView, QPushButton
+from PyQt5.QtGui import QColor
 from openbb_terminal.sdk import openbb
-import requests
+#import requests
 import itertools
 import pandas as pd
 from PyQt5.QtCore import QAbstractTableModel, Qt
+from openbb_terminal.decorators import log_start_end
+from openbb_terminal.helper_funcs import request
 
 class Satoshi(QWidget):
 
@@ -23,17 +26,24 @@ class Satoshi(QWidget):
         self.button_coins_list = QPushButton('DeFi')
         self.button_coins_list.clicked.connect(self.coins_list)
 
+        # Crypto headline
+        self.button_headlines = QPushButton('Crypto Headlines')
+        self.button_headlines.clicked.connect(self.crypto_headlines)
+
         # Exit application
         self.button_exit = QPushButton('Exit')
         self.button_exit.clicked.connect(self.close_application)
 
         # Create a label to display the message. Used for any error messages
         self.label = QLabel('')
+        color = QColor(255,0,0) # red color
+        self.label.setStyleSheet("color: {}".format(color.name()))
 
         # Create a layout to organize the UI elements
         layout = QVBoxLayout()
         layout.addWidget(self.button_discovery_coins)
         layout.addWidget(self.button_coins_list)
+        layout.addWidget(self.button_headlines)
         layout.addWidget(self.label) #display error messages
         self.textarea = QTextEdit()
         self.textarea.setOverwriteMode(True)
@@ -42,6 +52,15 @@ class Satoshi(QWidget):
         layout.addWidget(self.button_exit)
         self.setLayout(layout)
         
+
+    def crypto_headlines(self):
+        result = request(f"https://api.finbrain.tech/v0/sentiments/USDC")
+        sentiment = pd.DataFrame()
+        if result.status_code != 200:
+            #error message
+            self.label.setText("Connection Error with status code " + str(result.status_code))
+        else:
+            self.label.setText("Displaying headlines on dataframe")
 
     def coins_list(self):
         coins_list = openbb.crypto.ov.coin_list()
