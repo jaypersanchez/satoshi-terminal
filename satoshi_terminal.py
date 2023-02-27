@@ -1,8 +1,10 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QTextEdit, QDesktopWidget
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QTextEdit, QDesktopWidget, QTableView
 from openbb_terminal.sdk import openbb
 import requests
 import itertools
+import pandas as pd
+from PyQt5.QtCore import QAbstractTableModel, Qt
 
 class Satoshi(QWidget):
 
@@ -35,6 +37,7 @@ class Satoshi(QWidget):
         layout.addWidget(self.label) #display error messages
         self.textarea = QTextEdit()
         self.textarea.setOverwriteMode(True)
+        self.textarea.toHtml()
         layout.addWidget(self.textarea)
         layout.addWidget(self.button_exit)
         self.setLayout(layout)
@@ -43,10 +46,8 @@ class Satoshi(QWidget):
     def coins_list(self):
         coins_list = openbb.crypto.ov.coin_list()
         str_coins_list = str(coins_list)
-        #self.textarea.append(str_coins_list)
         self.textarea.setText(str_coins_list)
-        #print(coins_list)    
-
+        
     def discover_coins(self):
         '''
         self.label.setText('Welcome to Satoshi Terminal Beta Version Powered By OpenBB')
@@ -55,6 +56,11 @@ class Satoshi(QWidget):
         str_coinstupple = str(coinstupple)
         #self.textarea.append(str_coinstupple)
         self.textarea.setText(str_coinstupple)
+        '''
+        view = QTableView()
+        view.setModel(coinstupple)
+        view.show()
+        '''
 
     def close_application(self):
         window.close()
