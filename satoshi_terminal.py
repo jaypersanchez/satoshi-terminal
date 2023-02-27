@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QTextEdit
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QTextEdit, QDesktopWidget
 from openbb_terminal.sdk import openbb
 import requests
 import itertools
@@ -21,19 +21,22 @@ class Satoshi(QWidget):
         self.button_coins_list = QPushButton('DeFi')
         self.button_coins_list.clicked.connect(self.coins_list)
 
+        # Exit application
+        self.button_exit = QPushButton('Exit')
+        self.button_exit.clicked.connect(self.close_application)
 
-
-        # Create a label to display the message
-        self.label = QLabel('asfsdaf')
+        # Create a label to display the message. Used for any error messages
+        self.label = QLabel('')
 
         # Create a layout to organize the UI elements
         layout = QVBoxLayout()
         layout.addWidget(self.button_discovery_coins)
         layout.addWidget(self.button_coins_list)
-        #layout.addWidget(self.label)
+        layout.addWidget(self.label) #display error messages
         self.textarea = QTextEdit()
         self.textarea.setOverwriteMode(True)
         layout.addWidget(self.textarea)
+        layout.addWidget(self.button_exit)
         self.setLayout(layout)
         
 
@@ -52,10 +55,15 @@ class Satoshi(QWidget):
         str_coinstupple = str(coinstupple)
         #self.textarea.append(str_coinstupple)
         self.textarea.setText(str_coinstupple)
+
+    def close_application(self):
+        window.close()
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = Satoshi()
+    #screen = QDesktopWidget().screenGeometry()
+    window.setGeometry(QDesktopWidget().screenGeometry())
     window.show()
     sys.exit(app.exec_())
 
