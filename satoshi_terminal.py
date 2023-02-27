@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QTextEdit, QDesktopWidget, QTableView, QPushButton
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QPixmap
 from openbb_terminal.sdk import openbb
 #import requests
 import itertools
@@ -17,7 +17,13 @@ class Satoshi(QWidget):
 
     def initUI(self):
         self.setWindowTitle('The Satoshi Terminal')
-
+        '''
+        self.setGeometry(100,100,800,600)
+        logo = QLabel(self)
+        pixmap = QPixmap("./Satoshi-logo.png")
+        logo.setPixmap(pixmap)
+        logo.setFixedSize(pixmap.width(), pixmap.height())
+        '''
         # discovery coins
         self.button_discovery_coins = QPushButton('Discover Coins')
         self.button_discovery_coins.clicked.connect(self.discover_coins)
